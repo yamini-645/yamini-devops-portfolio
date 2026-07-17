@@ -1,232 +1,231 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Yamini | DevOps Engineer</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
+(function () {
+  'use strict';
 
-  <header class="hero">
-    <h1>Yamini Nelluru</h1>
-    <p>DevOps Engineer</p>
-    <div class="hero-buttons">
-    <a href="#contact" class="btn primary">Contact Me</a>
-    <a href="#featured-projects" class="btn secondary">View My Work</a>
-  </div>
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  </header>
+  /* ---------------------------------------------
+     Terminal typing effect
+  --------------------------------------------- */
+  var terminalLines = [
+    { type: 'prompt', text: '$ whoami' },
+    { type: 'out',    text: 'yamini.nelluru — devops engineer, azure & kubernetes' },
+    { type: 'prompt', text: '$ az deployment list --status' },
+    { type: 'out',    text: 'STATUS: Succeeded   ENV: production   UPTIME: 99.95%' },
+    { type: 'prompt', text: '$ kubectl get pipelines' },
+    { type: 'out',    text: 'build ✔   test ✔   package ✔   deploy ✔   monitor ●' }
+  ];
 
-  <section class="card">
-    <h2>About Me</h2>
-    <p>
-	Experienced DevOps Engineer with 4 years of comprehensive expertise in designing, deploying, and maintaining scalable Azure cloud 	infrastructure and robust CI/CD pipelines. Adept at implementing automation solutions, optimizing system performance, and ensuring 	high availability across diverse environments. Proven ability to leverage Azure services to enhance system reliability, security, 	and scalability. Committed to driving operational excellence and contributing to the strategic goals of a forward-thinking 	organization through innovative DevOps practices and a collaborative, results-driven approach.
-    </p>
-  </section>
-  <section class="card">
-  <section class="card">
-  <h2 style="text-align:center;">Work Experience</h2>
+  function renderTerminalInstant(el) {
+    var html = '';
+    terminalLines.forEach(function (line) {
+      var cls = line.type === 'prompt' ? 'prompt' : 'out';
+      html += '<div class="' + cls + '">' + line.text + '</div>';
+    });
+    el.innerHTML = html + '<span class="cursor"></span>';
+  }
 
-  <div class="timeline">
+  function typeTerminal(el) {
+    if (reduceMotion) { renderTerminalInstant(el); return; }
 
-    <!-- Experience 1 -->
-    <div class="timeline-item left">
-      <div class="timeline-content">
-        <h3>Senior DevOps Engineer</h3>
-        <p class="company">Company Name</p>
-        <span class="duration">2022 – Present</span>
+    var lineIndex = 0, charIndex = 0;
+    var container = document.createElement('div');
+    el.appendChild(container);
+    var currentLineEl = null;
 
-        <ul>
-          <li>Led end-to-end design and implementation of CI/CD pipelines using Azure DevOps and Jenkins.</li>
-          <li>Provisioned and managed Azure infrastructure using Terraform following Infrastructure as Code practices.</li>
-          <li>Deployed and managed containerized applications on Azure Kubernetes Service (AKS).</li>
-          <li>Implemented monitoring and alerting using Grafana and Prometheus to improve system observability.</li>
-          <li>Collaborated with development and QA teams to improve deployment reliability and release consistency.</li>
-        </ul>
-      </div>
-    </div>
+    function typeChar() {
+      if (lineIndex >= terminalLines.length) {
+        var cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        el.appendChild(cursor);
+        return;
+      }
+      var line = terminalLines[lineIndex];
+      if (charIndex === 0) {
+        currentLineEl = document.createElement('div');
+        currentLineEl.className = line.type === 'prompt' ? 'prompt' : 'out';
+        container.appendChild(currentLineEl);
+      }
+      currentLineEl.textContent = line.text.slice(0, charIndex + 1);
+      charIndex++;
+      if (charIndex >= line.text.length) {
+        lineIndex++;
+        charIndex = 0;
+        setTimeout(typeChar, line.type === 'prompt' ? 260 : 90);
+      } else {
+        setTimeout(typeChar, line.type === 'prompt' ? 34 : 14);
+      }
+    }
+    typeChar();
+  }
 
-    <!-- Experience 2 -->
-    <div class="timeline-item right">
-      <div class="timeline-content">
-        <h3>DevOps Engineer</h3>
-        <p class="company">Previous Company</p>
-        <span class="duration">2020 – 2022</span>
+  var terminalBody = document.getElementById('terminalBody');
+  if (terminalBody) typeTerminal(terminalBody);
 
-        <ul>
-          <li>Contributed to the design and maintenance of CI/CD pipelines for application deployments.</li>
-          <li>Containerized applications using Docker and supported orchestration on AKS.</li>
-          <li>Supported Azure infrastructure operations including maintenance, upgrades, and performance tuning.</li>
-          <li>Developed automation scripts using Bash to reduce manual operational tasks.</li>
-          <li>Used Git for version control and supported Agile development workflows.</li>
-        </ul>
-      </div>
-    </div>
+  /* ---------------------------------------------
+     Pipeline nav: smooth scroll + active-stage sync
+  --------------------------------------------- */
+  var stages = Array.prototype.slice.call(document.querySelectorAll('.stage'));
+  var statusEl = document.getElementById('pipelineStatus');
 
-  </div>
-</section>
+  stages.forEach(function (stage) {
+    var targetId = stage.getAttribute('data-target');
+    var target = document.getElementById(targetId);
+    var btn = stage.querySelector('.stage-btn');
+    if (!target || !btn) return;
+    btn.addEventListener('click', function () {
+      target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    });
+  });
 
-  <h2>Skills</h2>
+  function setActiveStage(activeIndex) {
+    stages.forEach(function (stage, i) {
+      stage.classList.toggle('is-done', i < activeIndex);
+      stage.classList.toggle('is-active', i === activeIndex);
+    });
+    var label = stages[activeIndex] ? stages[activeIndex].querySelector('.stage-label').textContent : '';
+    if (statusEl && label) statusEl.innerHTML = 'run: <strong>' + label + '</strong>';
+  }
 
-  <div class="skills">
-    <span>Azure DevOps</span>
-    <span>CI/CD</span>
-    <span>Docker</span>
-    <span>Kubernetes</span>
-    <span>Terraform</span>
-    <span>Git</span>
-    <span>Sonarqube</span>
-    <span>Bash</span>
-    <span>Jenkins</span>
-    <span>Grafana</span>
-    <span>Jira</span>
-    <span>Python</span>
+  var sectionTargets = stages
+    .map(function (s) { return document.getElementById(s.getAttribute('data-target')); })
+    .filter(Boolean);
 
-  </div>
-</section>
-<section class="card">
-  <h2>Certifications</h2>
+  if (sectionTargets.length) {
+    var navObserver = new IntersectionObserver(function (entries) {
+      var visible = entries
+        .filter(function (e) { return e.isIntersecting; })
+        .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; });
+      if (visible.length) {
+        var idx = sectionTargets.indexOf(visible[0].target);
+        if (idx > -1) setActiveStage(idx);
+      }
+    }, { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
 
-  <ul class="cert-list">
-    <li>
-      <strong>Microsoft Azure Fundamentals (AZ-900)</strong><br />
-      <span>Microsoft</span>
-    </li>
+    sectionTargets.forEach(function (t) { navObserver.observe(t); });
+  }
 
-    <li>
-      <strong>Microsoft Azure Administrator (AZ-104)</strong><br />
-      <span>Microsoft</span>
-    </li>
+  /* ---------------------------------------------
+     Scroll reveal
+  --------------------------------------------- */
+  var revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    var revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(function (el) { revealObserver.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+  }
 
-    <li>
-      <strong>Docker & Kubernetes Certification</strong><br />
-      <span>Online Training / Platform</span>
-    </li>
+  /* ---------------------------------------------
+     Animated stat counters
+  --------------------------------------------- */
+  var statNums = document.querySelectorAll('.stat-num');
+  function animateCount(el) {
+    var target = parseInt(el.getAttribute('data-count'), 10) || 0;
+    if (reduceMotion) { el.textContent = target; return; }
+    var current = 0;
+    var step = Math.max(1, Math.ceil(target / 30));
+    var timer = setInterval(function () {
+      current += step;
+      if (current >= target) { current = target; clearInterval(timer); }
+      el.textContent = current;
+    }, 40);
+  }
+  if (statNums.length && 'IntersectionObserver' in window) {
+    var statObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animateCount(entry.target);
+          statObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+    statNums.forEach(function (el) { statObserver.observe(el); });
+  }
 
-    <li>
-      <strong>Terraform Associate (In Progress)</strong><br />
-      <span>HashiCorp</span>
-    </li>
-  </ul>
-</section>
-<section class="card">
-  <h2>Awards & Recognition</h2>
+  /* ---------------------------------------------
+     Skill hover notes
+  --------------------------------------------- */
+  var skillsWrap = document.getElementById('skillsWrap');
+  var skillNote = document.getElementById('skillNote');
+  if (skillsWrap && skillNote) {
+    skillsWrap.addEventListener('mouseover', function (e) {
+      var target = e.target.closest('span[data-note]');
+      if (target) skillNote.textContent = '→ ' + target.getAttribute('data-note');
+    });
+    skillsWrap.addEventListener('mouseleave', function () {
+      skillNote.innerHTML = '&nbsp;';
+    });
+  }
 
-  <ul class="award-list">
-    <li>
-      <strong>Applause Award</strong><br />
-      <span>Recognized for exceptional commitment to project delivery and production support during critical deployments.</span>
-    </li>
+  /* ---------------------------------------------
+     Project filter
+  --------------------------------------------- */
+  var filterBar = document.getElementById('filterBar');
+  var projectCards = Array.prototype.slice.call(document.querySelectorAll('.featured-card'));
+  var emptyState = document.getElementById('emptyState');
 
-    <li>
-      <strong>Best Team Player Award</strong><br />
-      <span>Awarded for cross-team collaboration and continuous support in DevOps initiatives.</span>
-    </li>
-  </ul>
-</section>
-<section class="card">
-  <h2>Education</h2>
+  if (filterBar) {
+    filterBar.addEventListener('click', function (e) {
+      var btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+      var filter = btn.getAttribute('data-filter');
 
-  <div class="education-item">
-    <span class="edu-year">2020</span>
-    <div>
-      <h3>B.Tech – Electronics and Communication Engineering</h3>
-      <p>Sri Sivani College of Engineering, Srikakulam</p>
-      <p><strong>CGPA:</strong> 7.7</p>
-    </div>
-  </div>
+      filterBar.querySelectorAll('.filter-btn').forEach(function (b) {
+        b.classList.toggle('is-active', b === btn);
+        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+      });
 
-  <div class="education-item">
-    <span class="edu-year">2016</span>
-    <div>
-      <h3>Intermediate</h3>
-      <p>Sri Chaitanya Junior College, Srikakulam</p>
-      <p><strong>Percentage:</strong> 88.5%</p>
-    </div>
-  </div>
+      var visibleCount = 0;
+      projectCards.forEach(function (card) {
+        var tags = (card.getAttribute('data-tags') || '').split(' ');
+        var show = filter === 'all' || tags.indexOf(filter) > -1;
+        card.classList.toggle('is-hidden', !show);
+        if (show) visibleCount++;
+      });
+      if (emptyState) emptyState.hidden = visibleCount !== 0;
+    });
+  }
 
-  <div class="education-item">
-    <span class="edu-year">2014</span>
-    <div>
-      <h3>10th Standard</h3>
-      <p>Sri Vani Vidya Nikethan, Srikakulam</p>
-      <p><strong>CGPA:</strong> 9.5</p>
-    </div>
-  </div>
-</section>
-<section class="card">
-  <h2>Languages Known</h2>
+  /* ---------------------------------------------
+     Copy email
+  --------------------------------------------- */
+  var copyBtn = document.getElementById('copyEmailBtn');
+  var copyLabel = document.getElementById('copyEmailLabel');
+  if (copyBtn && copyLabel) {
+    copyBtn.addEventListener('click', function () {
+      var email = copyBtn.getAttribute('data-email');
+      var reset = function () { copyLabel.textContent = 'Copy Email'; };
+      var showCopied = function () {
+        copyLabel.textContent = 'Copied ✓';
+        setTimeout(reset, 1800);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(showCopied, function () {
+          window.location.href = 'mailto:' + email;
+        });
+      } else {
+        window.location.href = 'mailto:' + email;
+      }
+    });
+  }
 
-  <div class="languages">
-    <span>English</span>
-    <span>Telugu</span>
-    <span>Hindi</span>
-    <span>Kannada</span>
-  </div>
-</section>
-
-
-  <section class="card" id="featured-projects">
-  <h2 style="text-align:center;">Featured Projects</h2>
-
-  <div class="featured-projects">
-
-    <div class="featured-card">
-      <h3>AKS Microservices CI/CD Platform</h3>
-      <p>Designed and implemented a scalable microservices deployment platform on Azure Kubernetes Service with automated CI/CD pipelines.</p>
-      <div class="tags">
-        <span>Azure</span><span>AKS</span><span>Docker</span><span>CI/CD</span>
-      </div>
-    </div>
-
-    <div class="featured-card">
-      <h3>Terraform Infrastructure Automation</h3>
-      <p>Developed modular Terraform architecture for consistent Azure infrastructure provisioning across environments.</p>
-      <div class="tags">
-        <span>Terraform</span><span>Azure</span><span>IaC</span>
-      </div>
-    </div>
-
-    <div class="featured-card">
-      <h3>Secure Secrets Management</h3>
-      <p>Implemented secure secrets handling for Kubernetes workloads following cloud security best practices.</p>
-      <div class="tags">
-        <span>Kubernetes</span><span>Security</span><span>Secrets</span>
-      </div>
-    </div>
-
-    <div class="featured-card">
-      <h3>Monitoring & Observability Platform</h3>
-      <p>Built Kubernetes monitoring dashboards using Prometheus and Grafana for cluster visibility.</p>
-      <div class="tags">
-        <span>Prometheus</span><span>Grafana</span><span>Monitoring</span>
-      </div>
-    </div>
-
-    <div class="featured-card">
-      <h3>Docker Image Optimization</h3>
-      <p>Optimized Docker images using multi-stage builds to reduce image size and improve deployment speed.</p>
-      <div class="tags">
-        <span>Docker</span><span>Containers</span><span>CI/CD</span>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-  <footer>
-    <p>
-      GitHub: https://github.com/your-username |
-      LinkedIn: https://linkedin.com/in/your-profile
-    </p>
-  </footer>
-
-</body>
-<section class="card" id="contact">
-  <h2>Contact Me</h2>
-  <p>Email: yamini@email.com</p>
-  <p>LinkedIn: https://linkedin.com/in/your-profile</p>
-</section>
-</html>
-
-
+  /* ---------------------------------------------
+     Back to top
+  --------------------------------------------- */
+  var backToTop = document.getElementById('backToTop');
+  if (backToTop) {
+    window.addEventListener('scroll', function () {
+      backToTop.classList.toggle('is-visible', window.scrollY > 500);
+    }, { passive: true });
+    backToTop.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+  }
+})();
