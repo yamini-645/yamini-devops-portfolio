@@ -8,11 +8,13 @@
   --------------------------------------------- */
   var terminalLines = [
     { type: 'prompt', text: '$ whoami' },
-    { type: 'out',    text: 'yamini.nelluru — devops engineer, azure & kubernetes' },
+    { type: 'out',    text: 'yamini.nelluru — systems engineer / devops, hyderabad, in' },
     { type: 'prompt', text: '$ az deployment list --status' },
     { type: 'out',    text: 'STATUS: Succeeded   ENV: production   UPTIME: 99.95%' },
     { type: 'prompt', text: '$ kubectl get pipelines' },
-    { type: 'out',    text: 'build ✔   test ✔   package ✔   deploy ✔   monitor ●' }
+    { type: 'out',    text: 'build ✔   test ✔   package ✔   deploy ✔   monitor ●' },
+    { type: 'prompt', text: '$ echo $AVAILABILITY' },
+    { type: 'out',    text: 'immediate joiner' }
   ];
 
   function renderTerminalInstant(el) {
@@ -103,6 +105,22 @@
 
     sectionTargets.forEach(function (t) { navObserver.observe(t); });
   }
+
+  /* ---------------------------------------------
+     Smooth scroll for internal nav buttons
+     (hero buttons, brand logo). These are plain
+     <button> elements (not <a href="#...">) so the
+     outer chat interface doesn't intercept them as
+     "external link" navigations.
+  --------------------------------------------- */
+  document.querySelectorAll('[data-scroll-target]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id = btn.getAttribute('data-scroll-target');
+      var target = document.getElementById(id);
+      if (!target) return;
+      target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    });
+  });
 
   /* ---------------------------------------------
      Scroll reveal
