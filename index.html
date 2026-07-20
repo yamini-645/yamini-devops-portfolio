@@ -1,231 +1,264 @@
-(function () {
-  'use strict';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Yamini Nelluru | Systems Engineer &amp; DevOps Engineer</title>
+<meta name="description" content="Yamini Nelluru — Systems Engineer (Infrastructure & Automation) / DevOps Engineer specializing in Azure, CI/CD pipelines, and Kubernetes." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  <!-- PIPELINE NAV — signature element: doubles as site nav + scroll progress -->
+  <nav class="pipeline-nav" aria-label="Page pipeline navigation">
+    <div class="pipeline-nav-inner">
+      <button type="button" class="pipeline-brand" data-scroll-target="hero">YN<span class="dot">.</span></button>
+      <ol class="pipeline-track" id="pipelineTrack">
+        <li class="stage" data-target="about">
+          <button class="stage-btn"><span class="stage-dot"></span><span class="stage-label">init</span></button>
+        </li>
+        <li class="stage" data-target="experience">
+          <button class="stage-btn"><span class="stage-dot"></span><span class="stage-label">build</span></button>
+        </li>
+        <li class="stage" data-target="skills">
+          <button class="stage-btn"><span class="stage-dot"></span><span class="stage-label">test</span></button>
+        </li>
+        <li class="stage" data-target="credentials">
+          <button class="stage-btn"><span class="stage-dot"></span><span class="stage-label">package</span></button>
+        </li>
+        <li class="stage" data-target="featured-projects">
+          <button class="stage-btn"><span class="stage-dot"></span><span class="stage-label">deploy</span></button>
+        </li>
+        <li class="stage" data-target="contact">
+          <button class="stage-btn"><span class="stage-dot"></span><span class="stage-label">monitor</span></button>
+        </li>
+      </ol>
+      <span class="pipeline-status" id="pipelineStatus">run: <strong>init</strong></span>
+    </div>
+  </nav>
 
-  /* ---------------------------------------------
-     Terminal typing effect
-  --------------------------------------------- */
-  var terminalLines = [
-    { type: 'prompt', text: '$ whoami' },
-    { type: 'out',    text: 'yamini.nelluru — devops engineer, azure & kubernetes' },
-    { type: 'prompt', text: '$ az deployment list --status' },
-    { type: 'out',    text: 'STATUS: Succeeded   ENV: production   UPTIME: 99.95%' },
-    { type: 'prompt', text: '$ kubectl get pipelines' },
-    { type: 'out',    text: 'build ✔   test ✔   package ✔   deploy ✔   monitor ●' }
-  ];
+  <header class="hero" id="hero">
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h1>Yamini Nelluru</h1>
+        <p class="role">Systems Engineer (Infrastructure &amp; Automation) · DevOps Engineer</p>
+        <p class="hero-sub">Systems Engineer with 4 years of Enterprise experience maintaining high-availability production environments and automating Azure infrastructure. Experienced in building CI/CD pipelines with Jenkins, containerizing and orchestrating workloads with Docker and Kubernetes, and provisioning infrastructure as code using Terraform.</p>
+        <p class="availability-badge">● Immediate Joiner</p>
+        <div class="hero-buttons">
+          <button type="button" class="btn primary" data-scroll-target="contact">Contact Me</button>
+          <button type="button" class="btn secondary" data-scroll-target="featured-projects">View My Work</button>
+        </div>
+      </div>
 
-  function renderTerminalInstant(el) {
-    var html = '';
-    terminalLines.forEach(function (line) {
-      var cls = line.type === 'prompt' ? 'prompt' : 'out';
-      html += '<div class="' + cls + '">' + line.text + '</div>';
-    });
-    el.innerHTML = html + '<span class="cursor"></span>';
-  }
+      <div class="terminal" role="img" aria-label="Terminal window showing a simulated Azure CLI session">
+        <div class="terminal-bar">
+          <span class="tdot red"></span><span class="tdot amber"></span><span class="tdot green"></span>
+          <span class="terminal-title">yamini@ops:~</span>
+        </div>
+        <div class="terminal-body" id="terminalBody" aria-hidden="true"></div>
+      </div>
+    </div>
+  </header>
 
-  function typeTerminal(el) {
-    if (reduceMotion) { renderTerminalInstant(el); return; }
+  <main>
 
-    var lineIndex = 0, charIndex = 0;
-    var container = document.createElement('div');
-    el.appendChild(container);
-    var currentLineEl = null;
+  <section class="card reveal" id="about">
+    <p class="section-kicker">stage 01 · init</p>
+    <h2>About Me</h2>
+    <p>
+      Results-driven Systems Engineer with 4 years of enterprise experience specializing in infrastructure management, operational uptime, and workload automation workflows. Adept at bridging corporate systems administration with Cloud and DevOps engineering practices, with hands-on experience building CI/CD pipelines using Jenkins, containerization with Docker &amp; Kubernetes, Infrastructure as Code (Terraform), Bash scripting, and observability tracking via Grafana dashboards. Recognized for technical adaptability, analytical troubleshooting, and a commitment to maintaining high availability across collaborative engineering environments.
+    </p>
+    <div class="stat-strip">
+      <div class="stat"><span class="stat-num" data-count="4">0</span><span class="stat-label">years experience</span></div>
+      <div class="stat"><span class="stat-num" data-count="18">0</span><span class="stat-label">tools &amp; platforms</span></div>
+      <div class="stat"><span class="stat-num" data-count="3">0</span><span class="stat-label">featured projects</span></div>
+      <div class="stat"><span class="stat-num" data-count="2">0</span><span class="stat-label">awards</span></div>
+    </div>
+  </section>
 
-    function typeChar() {
-      if (lineIndex >= terminalLines.length) {
-        var cursor = document.createElement('span');
-        cursor.className = 'cursor';
-        el.appendChild(cursor);
-        return;
-      }
-      var line = terminalLines[lineIndex];
-      if (charIndex === 0) {
-        currentLineEl = document.createElement('div');
-        currentLineEl.className = line.type === 'prompt' ? 'prompt' : 'out';
-        container.appendChild(currentLineEl);
-      }
-      currentLineEl.textContent = line.text.slice(0, charIndex + 1);
-      charIndex++;
-      if (charIndex >= line.text.length) {
-        lineIndex++;
-        charIndex = 0;
-        setTimeout(typeChar, line.type === 'prompt' ? 260 : 90);
-      } else {
-        setTimeout(typeChar, line.type === 'prompt' ? 34 : 14);
-      }
-    }
-    typeChar();
-  }
+  <section class="card reveal" id="experience">
+    <p class="section-kicker">stage 02 · build</p>
+    <h2 style="text-align:center;">Work Experience</h2>
 
-  var terminalBody = document.getElementById('terminalBody');
-  if (terminalBody) typeTerminal(terminalBody);
+    <div class="timeline">
+      <div class="timeline-item left reveal">
+        <div class="timeline-content">
+          <h3>Systems Engineer</h3>
+          <p class="company">Kyndryl Solutions Pvt Ltd · Bengaluru, Karnataka</p>
+          <span class="duration">09/2021 – 02/2025</span>
+          <ul>
+            <li>Monitored and maintained critical production environments ensuring high system availability and operational stability.</li>
+            <li>Managed production batch operations, workload execution, and operational support activities.</li>
+            <li>Investigated production incidents through log analysis and troubleshooting techniques.</li>
+            <li>Coordinated with development, infrastructure, and support teams to resolve operational issues within SLA timelines.</li>
+            <li>Participated in incident, problem, and change management activities.</li>
+            <li>Supported environment startup, maintenance, and operational readiness activities.</li>
+            <li>Performed operational monitoring, job validation, and system health checks.</li>
+            <li>Maintained operational documentation and compliance procedures; assisted in root cause analysis and preventive measures for recurring issues.</li>
+          </ul>
+        </div>
+      </div>
 
-  /* ---------------------------------------------
-     Pipeline nav: smooth scroll + active-stage sync
-  --------------------------------------------- */
-  var stages = Array.prototype.slice.call(document.querySelectorAll('.stage'));
-  var statusEl = document.getElementById('pipelineStatus');
+      <div class="timeline-item right reveal">
+        <div class="timeline-content">
+          <h3>Associate Systems Engineer</h3>
+          <p class="company">IBM India Pvt Ltd · Bengaluru, Karnataka</p>
+          <span class="duration">05/2021 – 08/2021</span>
+          <ul>
+            <li>Supported enterprise infrastructure operations and system administration activities.</li>
+            <li>Managed incident, service request, and change management workflows using ServiceNow.</li>
+            <li>Collaborated with development, QA, and support teams during deployment and maintenance activities.</li>
+            <li>Assisted in troubleshooting production issues and environment-related incidents.</li>
+            <li>Participated in operational monitoring and service availability management.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  stages.forEach(function (stage) {
-    var targetId = stage.getAttribute('data-target');
-    var target = document.getElementById(targetId);
-    var btn = stage.querySelector('.stage-btn');
-    if (!target || !btn) return;
-    btn.addEventListener('click', function () {
-      target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-    });
-  });
+  <section class="card reveal" id="skills">
+    <p class="section-kicker">stage 03 · test</p>
+    <h2>Technical Skills</h2>
+    <p class="section-hint">Hover a skill to see where it's used most.</p>
+    <div class="skills" id="skillsWrap">
+      <span data-note="Cloud platform">Azure</span>
+      <span data-note="Cloud · pipelines & release orchestration">Azure DevOps</span>
+      <span data-note="Cloud · managed Kubernetes">AKS</span>
+      <span data-note="CI/CD · build automation & job orchestration">Jenkins</span>
+      <span data-note="CI/CD · continuous integration & delivery">CI/CD Pipelines</span>
+      <span data-note="CI/CD · version control & branching strategy">Git</span>
+      <span data-note="Containers & IaC · image builds">Docker</span>
+      <span data-note="Containers & IaC · workload orchestration">Kubernetes</span>
+      <span data-note="Containers & IaC · infrastructure as code">Terraform</span>
+      <span data-note="Scripting · automation & operational tasks">Bash</span>
+      <span data-note="Scripting · Windows automation">Powershell</span>
+      <span data-note="Scripting · tooling basics">Python (Basics)</span>
+      <span data-note="Observability · dashboards & alerting">Grafana</span>
+      <span data-note="Observability · static code quality gates">SonarQube</span>
+      <span data-note="ITSM & Collaboration · sprint tracking">Jira</span>
+      <span data-note="ITSM & Collaboration · incident & change management">ServiceNow</span>
+      <span data-note="ITSM & Collaboration · service management framework">ITSM</span>
+      <span data-note="ITSM & Collaboration · workflow acceleration">Generative AI Tools</span>
+    </div>
+    <p class="skill-note" id="skillNote">&nbsp;</p>
+  </section>
 
-  function setActiveStage(activeIndex) {
-    stages.forEach(function (stage, i) {
-      stage.classList.toggle('is-done', i < activeIndex);
-      stage.classList.toggle('is-active', i === activeIndex);
-    });
-    var label = stages[activeIndex] ? stages[activeIndex].querySelector('.stage-label').textContent : '';
-    if (statusEl && label) statusEl.innerHTML = 'run: <strong>' + label + '</strong>';
-  }
+  <section class="card reveal" id="credentials">
+    <p class="section-kicker">stage 04 · package</p>
+    <h2>Certifications</h2>
+    <ul class="cert-list">
+      <li>
+        <strong>Microsoft Certified: Azure Fundamentals</strong><br />
+        <span>Microsoft</span>
+      </li>
+      <li>
+        <strong>Generative AI Mastermind</strong><br />
+        <span>Outskill</span>
+      </li>
+      <li>
+        <strong>Python Programming Essentials</strong><br />
+        <span>Certification</span>
+      </li>
+    </ul>
 
-  var sectionTargets = stages
-    .map(function (s) { return document.getElementById(s.getAttribute('data-target')); })
-    .filter(Boolean);
+    <h2>Awards &amp; Recognition</h2>
+    <ul class="award-list">
+      <li>
+        <strong>Certificate of Appreciation</strong><br />
+        <span>Awarded for extraordinary infrastructure support and client success — Kyndryl, 2023.</span>
+      </li>
+      <li>
+        <strong>Best Mentor Recognition</strong><br />
+        <span>Recognized for outstanding technical upskilling and onboarding of junior engineering teams.</span>
+      </li>
+    </ul>
 
-  if (sectionTargets.length) {
-    var navObserver = new IntersectionObserver(function (entries) {
-      var visible = entries
-        .filter(function (e) { return e.isIntersecting; })
-        .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; });
-      if (visible.length) {
-        var idx = sectionTargets.indexOf(visible[0].target);
-        if (idx > -1) setActiveStage(idx);
-      }
-    }, { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
+    <h2>Education</h2>
+    <div class="education-item">
+      <span class="edu-year">2016–2020</span>
+      <div>
+        <h3>B.Tech – Electronics and Communication Engineering</h3>
+        <p>Sri Sivani College of Engineering, Srikakulam</p>
+        <p><strong>CGPA:</strong> 7.7</p>
+        <p>Served as Student Placement Coordinator, managing campus recruitment pipelines and coordinating onboarding schedules with corporate HR teams.</p>
+      </div>
+    </div>
 
-    sectionTargets.forEach(function (t) { navObserver.observe(t); });
-  }
+    <h2>Languages Known</h2>
+    <div class="languages">
+      <span>English</span>
+      <span>Telugu</span>
+      <span>Kannada</span>
+      <span>Hindi</span>
+    </div>
+  </section>
 
-  /* ---------------------------------------------
-     Scroll reveal
-  --------------------------------------------- */
-  var revealEls = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window && !reduceMotion) {
-    var revealObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12 });
-    revealEls.forEach(function (el) { revealObserver.observe(el); });
-  } else {
-    revealEls.forEach(function (el) { el.classList.add('is-visible'); });
-  }
+  <section class="card reveal" id="featured-projects">
+    <p class="section-kicker">stage 05 · deploy</p>
+    <h2 style="text-align:center;">DevOps Projects</h2>
 
-  /* ---------------------------------------------
-     Animated stat counters
-  --------------------------------------------- */
-  var statNums = document.querySelectorAll('.stat-num');
-  function animateCount(el) {
-    var target = parseInt(el.getAttribute('data-count'), 10) || 0;
-    if (reduceMotion) { el.textContent = target; return; }
-    var current = 0;
-    var step = Math.max(1, Math.ceil(target / 30));
-    var timer = setInterval(function () {
-      current += step;
-      if (current >= target) { current = target; clearInterval(timer); }
-      el.textContent = current;
-    }, 40);
-  }
-  if (statNums.length && 'IntersectionObserver' in window) {
-    var statObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          animateCount(entry.target);
-          statObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.4 });
-    statNums.forEach(function (el) { statObserver.observe(el); });
-  }
+    <div class="filter-bar" id="filterBar" role="tablist" aria-label="Filter projects by category">
+      <button class="filter-btn is-active" data-filter="all" role="tab" aria-selected="true">All</button>
+      <button class="filter-btn" data-filter="cicd" role="tab" aria-selected="false">CI/CD</button>
+      <button class="filter-btn" data-filter="containers" role="tab" aria-selected="false">Containers</button>
+      <button class="filter-btn" data-filter="iac" role="tab" aria-selected="false">IaC</button>
+    </div>
 
-  /* ---------------------------------------------
-     Skill hover notes
-  --------------------------------------------- */
-  var skillsWrap = document.getElementById('skillsWrap');
-  var skillNote = document.getElementById('skillNote');
-  if (skillsWrap && skillNote) {
-    skillsWrap.addEventListener('mouseover', function (e) {
-      var target = e.target.closest('span[data-note]');
-      if (target) skillNote.textContent = '→ ' + target.getAttribute('data-note');
-    });
-    skillsWrap.addEventListener('mouseleave', function () {
-      skillNote.innerHTML = '&nbsp;';
-    });
-  }
+    <div class="featured-projects" id="projectsGrid">
 
-  /* ---------------------------------------------
-     Project filter
-  --------------------------------------------- */
-  var filterBar = document.getElementById('filterBar');
-  var projectCards = Array.prototype.slice.call(document.querySelectorAll('.featured-card'));
-  var emptyState = document.getElementById('emptyState');
+      <div class="featured-card" data-tags="cicd">
+        <h3>CI/CD Pipeline Automation using Jenkins</h3>
+        <p>Implemented CI/CD pipelines using Jenkins and Git for automated build and deployment workflows. Configured build, test, and deployment stages, integrated Git repositories for automated build triggers and version control, and used Bash scripting for deployment automation.</p>
+        <div class="tags"><span>Jenkins</span><span>Git</span><span>Bash</span><span>CI/CD</span></div>
+      </div>
 
-  if (filterBar) {
-    filterBar.addEventListener('click', function (e) {
-      var btn = e.target.closest('.filter-btn');
-      if (!btn) return;
-      var filter = btn.getAttribute('data-filter');
+      <div class="featured-card" data-tags="containers">
+        <h3>Containerization &amp; Kubernetes Deployment</h3>
+        <p>Containerized applications using Docker and managed image lifecycle. Deployed applications on Kubernetes and Azure Kubernetes Service (AKS), configured Deployments, Services, ConfigMaps, and Secrets, and performed Kubernetes troubleshooting using kubectl and logs.</p>
+        <div class="tags"><span>Docker</span><span>Kubernetes</span><span>AKS</span></div>
+      </div>
 
-      filterBar.querySelectorAll('.filter-btn').forEach(function (b) {
-        b.classList.toggle('is-active', b === btn);
-        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
-      });
+      <div class="featured-card" data-tags="iac">
+        <h3>Infrastructure Automation &amp; Monitoring</h3>
+        <p>Provisioned Azure Resource Groups, VNets, Subnets, Storage Accounts, and AKS resources using Terraform. Managed Terraform state files, remote backend configurations, and modules, and implemented monitoring using Grafana dashboards and alerting.</p>
+        <div class="tags"><span>Terraform</span><span>Azure</span><span>Grafana</span></div>
+      </div>
 
-      var visibleCount = 0;
-      projectCards.forEach(function (card) {
-        var tags = (card.getAttribute('data-tags') || '').split(' ');
-        var show = filter === 'all' || tags.indexOf(filter) > -1;
-        card.classList.toggle('is-hidden', !show);
-        if (show) visibleCount++;
-      });
-      if (emptyState) emptyState.hidden = visibleCount !== 0;
-    });
-  }
+    </div>
+    <p class="empty-state" id="emptyState" hidden>No pipelines match that filter yet — try another tag.</p>
+  </section>
 
-  /* ---------------------------------------------
-     Copy email
-  --------------------------------------------- */
-  var copyBtn = document.getElementById('copyEmailBtn');
-  var copyLabel = document.getElementById('copyEmailLabel');
-  if (copyBtn && copyLabel) {
-    copyBtn.addEventListener('click', function () {
-      var email = copyBtn.getAttribute('data-email');
-      var reset = function () { copyLabel.textContent = 'Copy Email'; };
-      var showCopied = function () {
-        copyLabel.textContent = 'Copied ✓';
-        setTimeout(reset, 1800);
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(email).then(showCopied, function () {
-          window.location.href = 'mailto:' + email;
-        });
-      } else {
-        window.location.href = 'mailto:' + email;
-      }
-    });
-  }
+  <section class="card reveal" id="contact">
+    <p class="section-kicker">stage 06 · monitor</p>
+    <h2>Contact Me</h2>
+    <p class="section-hint">Open a channel — happy to talk infrastructure, pipelines, or roles. Based in Hyderabad, India · Immediate Joiner.</p>
+    <div class="contact-row">
+      <button class="btn secondary copy-btn" id="copyEmailBtn" data-email="yamini.nelluru86@gmail.com">
+        <span id="copyEmailLabel">Copy Email</span>
+      </button>
+      <a class="btn secondary" href="tel:+918309946286">Call: +91-8309946286</a>
+      <a class="btn secondary" href="https://www.linkedin.com/in/yamini-nelluru-766825185" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn secondary" href="https://yamini-645.github.io/yamini-devops-portfolio/" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+    <p class="raw-email">yamini.nelluru86@gmail.com · Hyderabad, India</p>
+  </section>
 
-  /* ---------------------------------------------
-     Back to top
-  --------------------------------------------- */
-  var backToTop = document.getElementById('backToTop');
-  if (backToTop) {
-    window.addEventListener('scroll', function () {
-      backToTop.classList.toggle('is-visible', window.scrollY > 500);
-    }, { passive: true });
-    backToTop.addEventListener('click', function () {
-      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
-    });
-  }
-})();
+  </main>
+
+  <button id="backToTop" class="back-to-top" aria-label="Back to top">↑</button>
+
+  <footer>
+    <p>
+      GitHub: <a href="https://yamini-645.github.io/yamini-devops-portfolio/">yamini-645.github.io/yamini-devops-portfolio</a> ·
+      LinkedIn: <a href="https://www.linkedin.com/in/yamini-nelluru-766825185">linkedin.com/in/yamini-nelluru-766825185</a>
+    </p>
+    <p class="footer-status" id="footerStatus">pipeline: <span class="ok">passing</span></p>
+  </footer>
+
+<script src="script.js"></script>
+</body>
+</html>
